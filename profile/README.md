@@ -1,46 +1,48 @@
 # Ardosia
 
-Ardosia is an experimental, Rust-first server stack targeting the historical **Minecraft: Pocket Edition 0.15.10** protocol.
+Ardosia is a Rust-first server-engineering project targeting the historical **Minecraft: Pocket Edition 0.15.10 alpha** stack.
 
-The project is being rebuilt as small, independently testable components with clear boundaries between transport, game protocol, and server behavior.
+Current compatibility target:
+
+- Minecraft: Pocket Edition `0.15.10`
+- game protocol `84`
+- RakNet protocol `8`
+
+## Repositories
+
+### `ardosia-raknet`
+
+Ardosia-maintained RakNet transport hardfork for asynchronous UDP networking in Rust.
+
+### `ardosia-network`
+
+Ardosia networking facade, transport integration, and reproducible load-testing infrastructure.
+
+### `ardosia-protocol`
+
+Minecraft: Pocket Edition 0.15.10 protocol 84 codecs and packet definitions.
+
+### `ardosia`
+
+Legacy Java implementation retained temporarily as historical and behavioral reference material. New architecture is Rust-first and should not depend on the legacy repository.
+
+## Architecture
 
 ```text
-        Ardosia
-           |
-     game / server
-           |
-  ardosia-protocol
-   MCPE protocol 84
-           |
-   ardosia-network
-      UDP + RakNet
+server / game
+    |
+    v
+ardosia-protocol
+    |
+    v
+ardosia-network
+    |
+    v
+ardosia-raknet
 ```
 
-## What we care about
+Transport and game-protocol responsibilities are intentionally kept separate so each layer can be tested and evolved independently.
 
-Ardosia is being developed around a few non-negotiable engineering goals:
+The project is pre-release. Compatibility claims apply only to the historical target above and do not imply support for current Minecraft Bedrock releases.
 
-- protocol correctness before compatibility shortcuts;
-- performance measured with repeatable benchmarks;
-- security and bounded resource behavior from the transport layer upward;
-- explicit architectural boundaries between RakNet and the MCPE game protocol;
-- data-driven optimization instead of speculative rewrites.
-
-## Current status
-
-Development is **pre-release** and currently private.
-
-The active rewrite targets:
-
-- Minecraft: Pocket Edition `0.15.10`;
-- game protocol `84`;
-- RakNet protocol `8`;
-- a Rust-first networking and protocol stack.
-
-No compatibility with current Minecraft Bedrock releases is implied.
-
-## Historical scope
-
-Ardosia intentionally targets an old Pocket Edition protocol for research, preservation, experimentation, and server-engineering work.
-
-Ardosia is an independent project and is **not affiliated with Mojang Studios or Microsoft**.
+Ardosia is an independent project and is not affiliated with Mojang Studios or Microsoft.
