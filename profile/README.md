@@ -16,11 +16,13 @@ Ardosia-maintained RakNet transport hardfork for asynchronous UDP networking in 
 
 ### `ardosia-network`
 
-Ardosia networking facade, transport integration, and reproducible load-testing infrastructure.
+Stable Ardosia-facing networking facade and RakNet transport integration.
+
+Historical load-testing evidence is preserved in the repository, but the former in-repository load generator and benchmark harness have been intentionally removed.
 
 ### `ardosia-protocol`
 
-Minecraft: Pocket Edition 0.15.10 protocol 84 codecs and packet definitions.
+Minecraft: Pocket Edition 0.15.10 protocol 84 codecs, packet definitions, login/session state, and version-specific wire behavior. This is the next active Rust-first implementation milestone.
 
 ### `ardosia`
 
@@ -43,6 +45,8 @@ ardosia-raknet
 
 Transport and game-protocol responsibilities are intentionally kept separate so each layer can be tested and evolved independently.
 
-The project is pre-release. Compatibility claims apply only to the historical target above and do not imply support for current Minecraft Bedrock releases.
+The active Rust repositories target a pinned modern toolchain baseline rather than a moving `stable` compiler. Compatibility claims apply only to the historical Minecraft target above and do not imply support for current Minecraft Bedrock releases.
+
+The project is pre-release.
 
 Ardosia is an independent project and is not affiliated with Mojang Studios or Microsoft.
