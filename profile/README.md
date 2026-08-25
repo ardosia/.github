@@ -7,56 +7,56 @@ Current compatibility target:
 - Minecraft: Pocket Edition `0.15.10`
 - game protocol `84`
 - RakNet protocol `8`
+- Rust `1.98`
+
+## Current status
+
+The first real-client Rust milestone is complete through the pre-chunk session boundary. A real MCPE 0.15.10 client can discover the server, establish a RakNet 8 connection, complete protocol-84 Login/bootstrap, negotiate chunk radius, and reach `ReadyForChunks`.
+
+The client currently remains on the terrain-loading screen because world/chunk serialization and initial chunk streaming are the next development stage.
 
 ## Repositories
 
-### `ardosia-raknet`
+### `ardosia-server`
 
-Ardosia-maintained standalone RakNet transport hardfork for asynchronous UDP networking in Rust.
-
-### `ardosia-network`
-
-Stable Ardosia-facing networking facade and RakNet transport integration.
-
-Historical load-testing evidence is preserved in the repository, but the former in-repository load generator and benchmark harness were intentionally removed.
+Active Rust server/application layer. Owns application lifecycle, protocol/network session orchestration, admission and chunk-radius policy, and the composition boundary for upcoming world/chunk systems.
 
 ### `ardosia-protocol`
 
-Minecraft: Pocket Edition 0.15.10 protocol-84 codecs and compatibility layer. The first Rust protocol kernel/login milestone is implemented, including bounded primitive/framing support, structural Login decoding, PlayStatus, Disconnect, Batch, malformed-input hardening, and preserved protocol-84 wire evidence.
+Transport-independent MCPE 0.15.10 / protocol-84 compatibility layer. Owns bounded packet codecs, Login parsing, protocol/session state, the pre-chunk bootstrap packet slice, and preserved protocol-84 wire evidence.
 
-Login/JWS data remains explicitly unverified; structural parsing is not authentication.
+Login/JWS claims are structurally parsed but remain explicitly **unverified**; parsing is not authentication.
 
-### `ardosia-server`
+### `ardosia-network`
 
-Reserved Rust server/game/session layer. The repository exists but remains intentionally empty until its first bounded architecture is approved. It is expected to own game/session orchestration above the independently testable protocol and network layers.
+Small Ardosia-facing networking facade over the RakNet implementation. It exposes opaque payload transport, connection lifecycle, compatibility configuration, runtime controls, and transport metrics without owning MCPE packet semantics.
+
+### `ardosia-raknet`
+
+Standalone Ardosia-maintained hardfork of `mcbe-rs/raknet-rust`. Owns UDP/RakNet mechanics such as handshakes, reliability, ordering, retransmission, fragmentation, congestion/pacing, sharding, abuse controls, and low-level transport telemetry.
 
 ### `ardosia`
 
-Legacy Java implementation retained as historical and behavioral reference material. New architecture is Rust-first and does not depend on the legacy repository.
+Frozen legacy Java implementation retained as historical, behavioral, protocol, and storage reference material for the Rust-first rewrite. New architecture does not depend on the Java object model.
 
 ## Architecture
 
-Conceptually:
-
 ```text
-server / game
-    |
-    v
-ardosia-protocol
-    |
-    v
-ardosia-network
-    |
-    v
-ardosia-raknet
+ardosia-server
+   |-- ardosia-protocol
+   `-- ardosia-network
+          `-- ardosia-raknet
 ```
 
-The diagram is a logical stack, not a requirement that every crate directly depends on the next one. `ardosia-protocol` is currently synchronous and transport-independent with no Tokio, `ardosia-network`, or direct `ardosia-raknet` dependency. The future server/session integration may depend on both protocol and network while keeping RakNet internals below the networking facade.
+The layers are intentionally separated:
 
-Transport, game-protocol, and game/server responsibilities are intentionally kept separate so each layer can be tested and evolved independently.
+- RakNet stays generic transport infrastructure.
+- `ardosia-network` stays a game-agnostic transport facade.
+- `ardosia-protocol` owns version-specific MCPE wire behavior and remains synchronous/transport-independent.
+- `ardosia-server` owns game/session/world/application composition.
 
-The active Rust repositories use pinned modern toolchains rather than a moving `stable` compiler. Compatibility claims apply only to the historical Minecraft target above and do not imply support for current Minecraft Bedrock releases.
+The next major work is identifiers/registries, world and chunk domain boundaries, deterministic chunk sourcing/storage, protocol-84 chunk projection, and initial chunk streaming.
 
-The project is pre-release.
+Compatibility claims apply only to the historical Minecraft target above and do not imply support for current Bedrock releases. The project is pre-release.
 
 Ardosia is an independent project and is not affiliated with Mojang Studios or Microsoft.
