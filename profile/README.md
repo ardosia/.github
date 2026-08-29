@@ -15,7 +15,7 @@ The Rust stack has completed its first real-client milestone through the pre-chu
 
 **B0 identifiers and the frozen built-in block registry are complete. B1 world-domain modeling is the next active product mission.** World/chunk serialization and initial chunk streaming are not implemented yet, so the real client currently remains on the terrain-loading screen after the pre-chunk path.
 
-## Public open-source component
+## Public open-source components
 
 ### [`ardosia-raknet`](https://github.com/ardosia/ardosia-raknet)
 
@@ -25,28 +25,35 @@ It owns generic UDP/RakNet mechanics such as handshakes, reliability, ordering, 
 
 The hardfork is pre-release and Git-only for now. See its repository for exact-SHA usage, upstream provenance, contribution guidance, and security reporting.
 
+### [`ardosia-network`](https://github.com/ardosia/ardosia-network)
+
+`ardosia-network` is the Apache-2.0 game-agnostic facade between application code and the RakNet implementation.
+
+It owns validated transport configuration, listener and connection lifecycle, opaque connected-payload delivery, bounded queues/backpressure, and graceful shutdown while keeping RakNet implementation types behind a small stable surface. Minecraft packet definitions, protocol sequencing, player state, gameplay, and world behavior deliberately remain outside this repository.
+
+The crate is pre-release and remains `publish = false`; public source visibility does not imply a crates.io release. Its RakNet dependency is pinned to an exact revision of the public `ardosia-raknet` hardfork for reproducible integration.
+
 ## Private development stack
 
-The rest of the active Rust stack remains under private development for now:
+The product-specific layers remain under private development for now:
 
-- **`ardosia-server`** — application lifecycle, player-session orchestration, game/world composition, and server policy;
 - **`ardosia-protocol`** — transport-independent MCPE 0.15.10 / protocol-84 semantics, wire compatibility, and protocol evidence;
-- **`ardosia-network`** — small game-agnostic facade between the application and RakNet transport.
+- **`ardosia-server`** — application lifecycle, player-session orchestration, game/world composition, and server policy.
 
-Their repository visibility and licensing are separate decisions from the public RakNet hardfork. This organization profile does not imply that those private repositories are currently distributed as open source.
+Their repository visibility and licensing remain separate deliberate decisions. The Apache-2.0 licenses selected for the public RakNet and Network repositories do not automatically determine the licenses of the private Protocol or Server repositories.
 
 ## Architecture
 
 ```text
-ardosia-server
-   |-- ardosia-protocol
-   `-- ardosia-network
-          `-- ardosia-raknet
+ardosia-server                 private
+   |-- ardosia-protocol        private
+   `-- ardosia-network         public, Apache-2.0
+          `-- ardosia-raknet   public, Apache-2.0
 ```
 
 The layers are intentionally separated:
 
-- RakNet stays generic transport infrastructure.
+- `ardosia-raknet` stays generic transport infrastructure.
 - `ardosia-network` stays a game-agnostic transport facade.
 - `ardosia-protocol` owns protocol-84 semantics and wire compatibility while remaining synchronous and transport-independent.
 - `ardosia-server` owns player lifecycle, application policy, and world/game composition.
