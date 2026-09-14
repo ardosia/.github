@@ -4,73 +4,70 @@ Ardosia is a Rust-first server-engineering project targeting the historical **Mi
 
 Current compatibility target:
 
-- Minecraft: Pocket Edition `0.15.10`
+- Minecraft: Pocket Edition / Windows 10 Edition Beta `0.15.10`
 - game protocol `84`
 - RakNet protocol `8`
 - Rust `1.98`
 
-## Current status
+## Status model
 
-The merged private server mainline has completed the session/bootstrap path plus B0 identifiers/registries, B1 semantic world modeling, and B2 chunk source/generation contracts.
+Ardosia separates **merged baseline**, **active private development**, and **historical evidence**. Repository default branches describe merged state; private feature/integration branches may be substantially ahead and are not presented as released milestones until accepted.
 
-A real 0.15.10 client has been verified through the pre-chunk `ReadyForChunks` boundary on the merged line. Post-B2 integration work now covers protocol-84 chunk projection, initial player chunk streaming, chunk-interest lifecycle hardening, and first-spawn/client-wire alignment. Those post-B2 changes remain development work until they are accepted into the private mainlines; this public profile does not treat an unmerged branch as a released milestone.
+The merged private server `main` line has completed session/bootstrap plus B0 identifiers/registries, B1 semantic world modeling, and B2 chunk source/generation contracts. Active private development has moved beyond initial chunk streaming into gameplay/world-simulation compatibility work, including persistence/lifecycle, inventory and block interaction slices, entity/world integration, time/weather/random-tick accounting, and native stored-light parity. Those details remain development-branch state until merged.
 
-## Public open-source components
+A real 0.15.10 client has been used as an acceptance oracle for compatibility-sensitive milestones. Compatibility claims are kept narrower than implementation progress: branch code, reverse-engineering evidence, and an actual client smoke test are treated as separate proof layers.
 
-### [`ardosia-raknet`](https://github.com/ardosia/ardosia-raknet)
+## Repository map
 
-Ardosia's reusable Apache-2.0 hardfork of `mcbe-rs/raknet-rust`.
+### Public open-source components
 
-It owns generic UDP/RakNet mechanics such as handshakes, reliability, ordering, retransmission, fragmentation/reassembly, congestion/pacing, sharded runtime behavior, transport abuse controls, and low-level telemetry. It intentionally does **not** own Minecraft packets, gameplay state, world state, or Ardosia application behavior.
+#### [`ardosia-raknet`](https://github.com/ardosia/ardosia-raknet)
 
-The hardfork is pre-release and Git-only for now. See its repository for exact-SHA usage, upstream provenance, contribution guidance, and security reporting.
+Reusable Apache-2.0 hardfork of `mcbe-rs/raknet-rust`. It owns generic UDP/RakNet mechanics such as handshakes, reliability, ordering, retransmission, fragmentation/reassembly, congestion/pacing, sharded runtime behavior, transport abuse controls, and low-level telemetry. It intentionally does **not** own Minecraft packets, gameplay state, world state, or Ardosia application behavior.
 
-### [`ardosia-network`](https://github.com/ardosia/ardosia-network)
+The hardfork is pre-release and Git-only. Ardosia consumers pin an exact verified revision rather than following a moving branch.
 
-`ardosia-network` is the public Apache-2.0 game-agnostic facade between application code and the RakNet implementation.
+#### [`ardosia-network`](https://github.com/ardosia/ardosia-network)
 
-It owns validated transport configuration, listener and connection lifecycle, opaque connected-payload delivery, bounded queues/backpressure, and graceful shutdown while keeping RakNet implementation types behind a small stable surface. Minecraft packet definitions, protocol sequencing, player state, gameplay, and world behavior deliberately remain outside this repository.
+Public Apache-2.0 game-agnostic facade between application code and RakNet. It owns validated transport configuration, listener/connection lifecycle, opaque connected-payload delivery, bounded queues/backpressure, and graceful shutdown while keeping RakNet implementation types behind a small public surface.
 
-The crate is pre-release and remains `publish = false`; public source visibility does not imply a crates.io release. Its RakNet dependency is pinned to an exact revision of the public `ardosia-raknet` hardfork for reproducible integration.
+The crate remains pre-release and `publish = false`.
 
-## Private development stack
+### Private development and evidence repositories
 
-The product-specific layers remain under private development:
+- **`ardosia-protocol`** — synchronous, transport-independent MCPE 0.15.10 / protocol-84 semantics, codecs, fixtures, and protocol evidence.
+- **`ardosia-server`** — application lifecycle, player/session orchestration, gameplay/world composition, persistence, simulation, semantic-to-wire projection, and chunk streaming.
+- **`ardosia-mcpe-dump`** — server-relevant reverse-engineering evidence extracted from the frozen 0.15.10 x86 target; findings distinguish confirmed binary/asset evidence from unresolved semantics.
+- **`ardosia`** — frozen Java implementation retained as a historical compatibility/reference oracle, not the architecture template for the Rust rewrite.
 
-- **`ardosia-protocol`** — transport-independent MCPE 0.15.10 / protocol-84 semantics, wire compatibility, and protocol evidence;
-- **`ardosia-server`** — application lifecycle, player-session orchestration, game/world composition, projection/streaming integration, and server policy.
-
-Their repository visibility and licensing remain separate deliberate decisions. The Apache-2.0 licenses selected for the public RakNet and Network repositories do not automatically determine the licenses of the private Protocol or Server repositories.
+The private repositories have independent licensing/governance decisions. Apache-2.0 on the public RakNet and Network repositories does not implicitly license the private layers.
 
 ## Architecture
 
 ```text
-ardosia-server                 private
-   |-- ardosia-protocol        private
-   `-- ardosia-network         public, Apache-2.0
-          `-- ardosia-raknet   public, Apache-2.0
+ardosia-server                 private application/game/world layer
+   |-- ardosia-protocol        private protocol-84 semantics/wire
+   `-- ardosia-network         public, Apache-2.0 transport facade
+          `-- ardosia-raknet   public, Apache-2.0 RakNet hardfork
+
+ardosia-mcpe-dump              private native compatibility evidence
+ardosia                        private frozen Java reference
 ```
 
-The layers are intentionally separated:
+The boundaries are intentional:
 
 - `ardosia-raknet` stays generic transport infrastructure.
 - `ardosia-network` stays a game-agnostic transport facade.
 - `ardosia-protocol` owns protocol-84 semantics and wire compatibility while remaining synchronous and transport-independent.
-- `ardosia-server` owns player lifecycle, application policy, world/game composition, and semantic-to-wire projection orchestration.
+- `ardosia-server` owns player lifecycle, application policy, gameplay/world behavior, persistence/simulation, and semantic-to-wire orchestration.
+- evidence repositories preserve target behavior without becoming runtime dependencies by default.
 
-## Roadmap
+## Development discipline
 
-Merged private server status:
+The target is single-version by design. New work should preserve exact historical behavior where evidence exists and remain conservative where it does not. Native evidence, stored-wire fixtures, legacy Java behavior, and later Bedrock documentation are not treated as interchangeable proof sources.
 
-```text
-A   Session bootstrap                     COMPLETE
-B0  Game identifiers + registries         COMPLETE
-B1  Semantic world domain                 COMPLETE
-B2  Chunk source + generation contracts   COMPLETE
-```
+Merged status should be read from repository default branches. Active work should be read from the branch actually pinned/consumed by its parent repository, and old dated plans should not be used as current roadmap state.
 
-Post-B2 development is integrating B5 protocol-84 chunk projection and B6 player chunk streaming, followed by lifecycle/client-wire hardening. Persistent storage and broader gameplay remain separate later work rather than being folded into the transport/protocol layers.
-
-Compatibility claims apply only to the historical Minecraft target above and do not imply support for current Bedrock releases. The project is pre-release.
+Compatibility claims apply only to the historical target above and do not imply support for current Bedrock releases. The project is pre-release.
 
 Ardosia is an independent project and is not affiliated with Mojang Studios or Microsoft.
