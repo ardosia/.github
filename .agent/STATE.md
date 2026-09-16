@@ -1,27 +1,28 @@
 # Current Public Metadata State
 
 Last updated: 2026-09-16
-Current milestone: centralized-documentation cleanup
+Current milestone: stable public metadata after centralized documentation migration
 Current branch: `main`
-Current head after workflow/profile cleanup: `5a52bb8fff29ca268504fce28652ffa32e16eae3`
 
 ## Working
 - `.agent/` workflow harness is installed.
-- Public organization profile now contains only stable project/target/repository-boundary information instead of a detailed implementation-status ledger.
+- Public organization profile contains only stable project/target/repository-boundary information rather than detailed implementation status.
 - Public reusable transport repositories remain separate from private application/protocol/evidence layers.
+- `ardosia/ardosia-docs` exists and is private; detailed central engineering documentation therefore is intentionally not linked from the public organization profile.
 
 ## Partially working
-- A central documentation link cannot be added until `ardosia/ardosia-docs` exists and its visibility/link policy is known.
+None for the current metadata scope.
 
 ## Broken / failing
 - No runtime behavior exists in this metadata repository.
 
 ## Validation status
 - Runtime/build/tests: **NOT APPLICABLE** for this metadata-only repository.
-- Profile/content review in this migration round: **PASS** by direct file inspection and post-write tree verification.
+- Public profile content review: **PASS** by direct inspection; no profile content change was needed in the final centralization round.
 
 ## Current blocker
-- Central documentation migration is **BLOCKED** until `ardosia/ardosia-docs` exists. The current connector cannot create repositories.
+None.
 
 ## Active work
-- Wait for central docs repository creation, then add an appropriate public pointer if useful.
+- Keep the public profile synchronized only when stable public repository roles or fixed target facts change.
+- Do not mirror private implementation status or private central documentation into the public profile.
