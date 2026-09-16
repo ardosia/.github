@@ -1,7 +1,7 @@
 # Public Metadata Next Work
 
-1. After `ardosia/ardosia-docs` exists, decide whether it is public or private and add an appropriate organization-profile link if useful.
+1. Keep detailed engineering continuation state out of the public profile; publish only stable public facts and repository roles.
 
-2. Keep detailed engineering continuation state out of the public profile; synchronize only stable public facts and repository roles.
+2. If the public repository map or fixed compatibility target changes, update the profile and this harness together.
 
-3. If the public repository map changes, update the profile and this harness together so public metadata does not become a stale roadmap.
+3. Keep private `ardosia-docs` content private unless its visibility policy changes explicitly; do not add a public profile link merely because the repository exists.
