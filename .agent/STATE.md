@@ -1,28 +1,21 @@
-# Current Public Metadata State
+# Current State
 
-Last updated: 2026-09-16
-Current milestone: stable public metadata after centralized documentation migration
-Current branch: `main`
+Last updated: 2026-09-17
+Repository role: public Ardosia organization metadata/profile
+Default branch: `main`
 
 ## Working
-- `.agent/` workflow harness is installed.
-- Public organization profile contains only stable project/target/repository-boundary information rather than detailed implementation status.
-- Public reusable transport repositories remain separate from private application/protocol/evidence layers.
-- `ardosia/ardosia-docs` exists and is private; detailed central engineering documentation therefore is intentionally not linked from the public organization profile.
+- Public organization profile/metadata remains intentionally minimal and stable.
+- It describes Ardosia as the Rust-first reconstruction while avoiding private implementation status or sensitive internal details.
+- `.agent/{CONTEXT,STATE,DECISIONS,NEXT}.md` is the repository-local continuity harness.
+- Durable project/research documentation is centralized in the private `ardosia-docs` repository; private organization execution state lives in `.github-private`.
 
-## Partially working
-None for the current metadata scope.
-
-## Broken / failing
-- No runtime behavior exists in this metadata repository.
+## Current convergence impact
+The 2026-09-17 workflow/runtime-convergence migration does not require public profile changes. Identity/map/login implementation status, internal branch queues, dependency pins, and private evidence details remain out of the public profile unless separately approved for publication.
 
 ## Validation status
-- Runtime/build/tests: **NOT APPLICABLE** for this metadata-only repository.
-- Public profile content review: **PASS** by direct inspection; no profile content change was needed in the final centralization round.
-
-## Current blocker
-None.
+- This branch changes only internal `.agent` state/queue: repository metadata/profile behavior validation **NOT RUN** because the public profile content is unchanged.
+- Agent writes: **PASS** when GitHub confirms them.
 
 ## Active work
-- Keep the public profile synchronized only when stable public repository roles or fixed target facts change.
-- Do not mirror private implementation status or private central documentation into the public profile.
+No public-content change is required. Keep the profile stable while the private/source repositories perform the runtime convergence work.

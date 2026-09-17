@@ -1,7 +1,7 @@
-# Public Metadata Next Work
+# Next Work
 
-1. Keep detailed engineering continuation state out of the public profile; publish only stable public facts and repository roles.
+1. Keep the public organization profile stable unless a deliberate public-facing messaging change is requested.
+2. Do not publish private branch status, evidence details, dependency pins, internal blockers, or implementation queues from `.github-private`/source repositories by accident.
+3. If public project positioning changes, update the profile as a separate reviewed documentation task.
 
-2. If the public repository map or fixed compatibility target changes, update the profile and this harness together.
-
-3. Keep private `ardosia-docs` content private unless its visibility policy changes explicitly; do not add a public profile link merely because the repository exists.
+No runtime-convergence implementation belongs in this repository.
