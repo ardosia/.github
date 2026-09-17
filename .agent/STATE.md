@@ -2,20 +2,21 @@
 
 Last updated: 2026-09-17
 Repository role: public Ardosia organization metadata/profile
+Current milestone: repository hygiene only
 Default branch: `main`
 
 ## Working
 - Public organization profile/metadata remains intentionally minimal and stable.
-- It describes Ardosia as the Rust-first reconstruction while avoiding private implementation status or sensitive internal details.
+- It describes Ardosia at a stable public level without private implementation status, branch queues, dependency pins, or internal evidence details.
 - `.agent/{CONTEXT,STATE,DECISIONS,NEXT}.md` is the repository-local continuity harness.
 - Durable project/research documentation is centralized in the private `ardosia-docs` repository; private organization execution state lives in `.github-private`.
 
-## Current convergence impact
-The 2026-09-17 workflow/runtime-convergence migration does not require public profile changes. Identity/map/login implementation status, internal branch queues, dependency pins, and private evidence details remain out of the public profile unless separately approved for publication.
+## Current impact
+The organization is performing repository/branch hygiene and agent-state reconciliation. No public profile content change is required.
 
-## Validation status
-- This branch changes only internal `.agent` state/queue: repository metadata/profile behavior validation **NOT RUN** because the public profile content is unchanged.
-- Agent writes: **PASS** when GitHub confirms them.
+## Validation
+- Workflow/state reconciliation to `main`: **PASS**.
+- Public profile behavior/content change: **NOT RUN** because profile content is unchanged.
 
 ## Active work
-No public-content change is required. Keep the profile stable while the private/source repositories perform the runtime convergence work.
+Internal branch/state cleanup only. Keep the public profile stable unless a deliberate public-facing messaging change is requested.
